@@ -1,6 +1,9 @@
-specVersion: 1.3.0
+specVersion: 0.0.5
+description: >
+  Subgraph to index the Bolero Music Primary Market V2 contract on Polygon.
 indexerHints:
   prune: auto
+repository: https://github.com/Sigri44/graph-boleromusic
 schema:
   file: ./schema.graphql
 dataSources:
@@ -16,11 +19,41 @@ dataSources:
       apiVersion: 0.0.9
       language: wasm/assemblyscript
       entities:
+        - BuyFromListing
+        - CanceledListing
+        - Initialized
+        - NewListing
+        - Paused
+        - RoleAdminChanged
+        - RoleGranted
+        - RoleRevoked
+        - Unpaused
+        - UpdatedListing
         - Upgraded
       abis:
         - name: PrimaryMarketV2
           file: ./abis/PrimaryMarketV2.json
       eventHandlers:
+        - event: BuyFromListing(address,address,uint256,uint256,uint256,uint256)
+          handler: handleBuyFromListing
+        - event: CanceledListing(address)
+          handler: handleCanceledListing
+        - event: Initialized(uint64)
+          handler: handleInitialized
+        - event: NewListing((uint256,uint256,address,address,address),address)
+          handler: handleNewListing
+        - event: Paused(address)
+          handler: handlePaused
+        - event: RoleAdminChanged(indexed bytes32,indexed bytes32,indexed bytes32)
+          handler: handleRoleAdminChanged
+        - event: RoleGranted(indexed bytes32,indexed address,indexed address)
+          handler: handleRoleGranted
+        - event: RoleRevoked(indexed bytes32,indexed address,indexed address)
+          handler: handleRoleRevoked
+        - event: Unpaused(address)
+          handler: handleUnpaused
+        - event: UpdatedListing(address,uint256,uint256,address)
+          handler: handleUpdatedListing
         - event: Upgraded(indexed address)
           handler: handleUpgraded
-      file: ./src/primary-market-v-2.ts
+      file: ./src/mapping.ts
